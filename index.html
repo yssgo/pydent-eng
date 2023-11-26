@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Python code indentation repairing tool</title>
+    <link href="./styles/style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div>
+        <h1>Python code indentation repairing tool</h1>
+    </div>
+    <div>
+        <p><a href="https://pydent-kor--usgnosny.repl.co/">한국어</a></p>
+    </div>
+    <div id="#wrap">
+    <div class="flow">
+      <p>Paste code here </p>
+      <p>
+      <textarea id="code" rows="20">if a=3:
+'''
+abcde
+'''
+c='''
+kbc
+'''
+f='''xxxx
+'''
+b=4
+else:
+  k=1
+ while k &lt; 5:
+  k -= 1
+  #END
+  c=5
+  #END if
+  print(a)
+match a,:
+case 'b',:
+dddddddd
+case 'c',:
+dddddd
+case _:
+dddddd
+#end match
+      </textarea>
+      </p>
+    </div>
+    <div class="flow">
+      <p>indented code</p>
+      <p>
+      <textarea id="indented" rows="20"></textarea>
+      </p>
+    </div>
+    <div>
+      <p>Warning: Whether it is in a string or not, the first pound character(#) is treated  as the start of a comment. </p>
+    </div>
+    <div><button id="btnIndent" onclick="indentIt()">indent it</button></div>
+    </div>
+    
+    <div id="desc_wrap">
+      <pre id="desc"></pre>
+    </div>
+
+    <div id="files">
+      <p><a href="./data/pydent(ko).py">pydent(ko).py</a>
+        <a href="./data/pydent(ko).py" download>download</a></p>
+      <p><a href="./data/pydent(en).py">pydent(en).py</a>
+        <a href="./data/pydent(en).py" download>download</a></p>
+
+      <p> script for Notepad++ PythonScript</p>
+      <p>You can search and install PythonScript in [Plugins/Plugins admin...] dialog.</p>
+      <hr />
+      <p><a href="./data/indent_py_ko.py" class="download">indent_py_ko.py</a> <a href="./data/indent_py_ko.py" download>download</a></p>
+      <p><a href="./data/indent_py_en.py" class="download">indent_py_en.py</a> <a href="./data/indent_py_en.py" download>download</a></p>
+      <p>standalone PYthon script</p>
+      <p>command line: </p>
+      <p><code>py -3 indnet_py_en.py source dest</code></p>
+      <p>importing in a python source file </p>
+    <pre>from indent_py_en import indent_pycode
+code=r"""
+a=3
+if a==3:
+'''
+abcde
+'''
+c='''
+xyz
+opq
+'''
+b=4
+else:
+  k=1
+ while k &lt; 5:
+   k-=1
+     #END
+c=5
+#END if
+print(a)
+"""
+print(indent_pycode(code))
+    </pre>
+    <hr>
+    <p>Note:</p>
+      <p> <a href="https://github.com/bruderstein/PythonScript/releases">Notepad++ PythonScript for Python 3</a></p>
+      <p> PythonScript for Pyhon 3 is in develepment stage. It cannot be used with PythonScript for Python 2.7.</p>
+    <p> This Plugin supports only utf-8 encoded doucments.</p>
+      <p> <del>PythonScript for Pyhon 3 cannot used on 64-bit systems.</del></p>
+      <p> <del>(Python 3.9 or later does not support 32-bit systems)</del></p>
+      <p><ins>Python 3.9 or later not supports 32-bit systems.</ins></p>
+    </div>
+
+    <script src="./scripts/indent_pycode_all_in_one.js">
+    </script>
+
+    <script defer src="./scripts/script_en.js">
+    </script>
+  </body>
+</html>

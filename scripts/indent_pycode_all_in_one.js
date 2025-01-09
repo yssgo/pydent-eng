@@ -244,7 +244,7 @@ function handle_end(){
 function handle_indent(){
     // global g_var.lev
     let wa = [];
-    if (g_var.stripped.startsWith("#INDENT")) {
+    if (g_var.stripped.toUpperCase().startsWith("#INDENT")) {
         wa = g_var.stripped.split(' ');
     } else {
         let stx= "#INDENT" + g_var.stripped.substring("# INDENT".length);
@@ -401,16 +401,16 @@ function indent_pycode(code){
             || g_var.stripped.toUpperCase().startsWith("# END")
         ) {
             handle_end();
-        } else if (g_var.stripped.startsWith("#INDENT")
-            || g_var.stripped.startsWith("# INDENT")
+        } else if (g_var.stripped.toUpperCase().startsWith("#INDENT")
+            || g_var.stripped.toUpperCase().startsWith("# INDENT")
         ) {
             handle_indent();
         } else if(g_var.stripped.toUpperCase() == '#BEGIN'
             || g_var.stripped.toUpperCase() == '# BEGIN'
         ){
-            leve -= 1;
+            g_var.lev -= 1;
             print(g_config.indent.repeat(g_var.lev) + g_var.text_.trim());
-            leve += 1;
+            g_vsr.lev += 1;
         } else if (g_var.stripped.startsWith("#")) {
             if(g_config.indent_comment){
                 print(g_config.indent.repeat(g_var.lev)+g_var.text_.trim());

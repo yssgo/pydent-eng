@@ -29,8 +29,9 @@ class PydentConfig {
         this.indent = ' '.repeat(this.tabsize);
         this.auto_unindent = true;
         this.indent_comment = true;
+        this.dedent_end_tag = true;
     }
-};
+}
 
 g_config = new PydentConfig();
 g_var = new PydentVariables();
@@ -74,7 +75,13 @@ Please insert the following special comments in the code:
     don't indent comment lines
 #INDENT-COMMENT ON
 #INDENT-COMMENT-ON
-    indent comment lines (default)\n`
+    indent comment lines (default)
+#DEDENT-END-TAG ON
+#DEDENT-END-TAG-ON
+    unindent #END tag lines (default)
+#DEDENT-END-TAG OFF
+#DEDENT-END-TAG-OFF
+    Don't unindent #END tag lines\n`;
 
 g_description_ko = `파이썬 코드의 들여 쓰기를 고치는 프로그램.
 콜론으로 끝나는 명령문 이후에, 들여 쓰기 수준이
@@ -114,7 +121,13 @@ g_description_ko = `파이썬 코드의 들여 쓰기를 고치는 프로그램.
     주석 줄도 자동 들여쓰기(기본)
 #COMMENT-OFF
 #COMMENT OFF
-    주석 줄 자동 들여쓰기 하지 않음`;
+    주석 줄 자동 들여쓰기 하지 않음
+#DEDENT-END-TAG ON
+#DEDENT-END-TAG-ON
+     #END 태그 줄 내어쓰기 (기본값임)
+#DEDENT-END-TAG OFF
+#DEDENT-END-TAG-OFF
+     #END 태그 줄 내어쓰지 않기\n`;
 
 // See also: https://stackoverflow.com/a/32523641
 function enableTab(id){
@@ -127,7 +140,7 @@ function enableTab(id){
             let e=obj.selectionEnd;
             ev.preventDefault();
             if(ev.shiftKey){
-                let s4s = v.substring(s-4,s)
+                let s4s = v.substring(s-4,s);
                 if(s4s.match(/^( {1,4})$/m) !== null){
                     let splen = (s4s.match(/^( {1,4})$/m))[1].length;
                     obj.value=v.substring(0,s-splen)+v.substring(e);
@@ -159,7 +172,7 @@ function check_if_auto_words(st){
 			'case (', 'case(', 'case ' // Python 3.10 match case
         ];
         for(let i=0; i < else_like.length; i++){
-            let x = else_like[i]
+            let x = else_like[i];
             if (st.startsWith(x)) {
                 return true;
             } //end if
@@ -180,7 +193,7 @@ function check_if_two_level_word_beginning(st){
 }
 
 function check_if_end_of_two_level_word(wrd){
-    let two_level_words = ['match']
+    let two_level_words = ['match'];
     for(let i=0; i < two_level_words.length; i++){
         let x = two_level_words[i];
         if (wrd == x){
@@ -213,7 +226,7 @@ function handle_end(){
                 g_var.stripped = g_var.stripped.substring(0, commentpos);
             } //end if
         } //endif
-        stx = "# END" + g_var.stripped.substring("# END".length);
+        let stx = "# END" + g_var.stripped.substring("# END".length);
         wa = stx.split(' ');
     } //end if
 
@@ -238,7 +251,7 @@ function handle_end(){
             g_var.lev = Math.max(0, g_var.lev);
         } //end if
     } //end if
-    print(g_config.indent.repeat(g_var.lev) + g_var.text_.trim());    
+    print(g_config.indent.repeat(g_var.lev+ 1*(g_config.dedent_end_tag!=true)) + g_var.text_.trim());    
 }
 
 function handle_indent(){
@@ -365,7 +378,7 @@ function indent_pycode(code){
             }
             g_config.indent = " ".repeat(g_config.tabsize);
             print(g_var.text_.trimRight());
-            continue
+            continue;
         }
 
 
@@ -397,6 +410,23 @@ function indent_pycode(code){
         ) {
             g_config.indent_comment = true;
             print(g_var.text_.trimRight());
+        }
+        else if (
+            g_var.stripped.toUpperCase()=='#DEDENT-END-TAG ON'
+            || g_var.stripped.toUpperCase()=='# DEDENT-END-TAG-ON'
+            || g_var.stripped.toUpperCase()=='#DEDENT-END-TAG ON'
+            || g_var.stripped.toUpperCase()=='# DEDENT-END-TAG ON'
+        ) {
+            g_config.dedent_end_tag = true;
+            print(g_var.text_.trimRight());
+        } else if (
+            g_var.stripped.toUpperCase()=='#DEDENT-END-TAG OFF'
+            || g_var.stripped.toUpperCase()=='# DEDENT-END-TAG-OFF'
+            || g_var.stripped.toUpperCase()=='#DEDENT-END-TAG OFF'
+            || g_var.stripped.toUpperCase()=='# DEDENT-END-TAG OFF'
+        ) {
+            g_config.dedent_end_tag = false;
+            print(g_var.text_.trimRight());
         } else if (g_var.stripped.toUpperCase().startsWith("#END")
             || g_var.stripped.toUpperCase().startsWith("# END")
         ) {
@@ -410,7 +440,7 @@ function indent_pycode(code){
         ){
             g_var.lev -= 1;
             print(g_config.indent.repeat(g_var.lev) + g_var.text_.trim());
-            g_vsr.lev += 1;
+            g_var.lev += 1;
         } else if (g_var.stripped.startsWith("#")) {
             if(g_config.indent_comment){
                 print(g_config.indent.repeat(g_var.lev)+g_var.text_.trim());
